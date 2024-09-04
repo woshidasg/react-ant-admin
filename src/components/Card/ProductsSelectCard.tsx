@@ -150,6 +150,8 @@ export default function ProductsSelectCard() {
                             defaultValue="全部"
                             style={{ width: 100 }}
                             listHeight={230}
+                            dropdownMatchSelectWidth={false}
+                            dropdownStyle={{ width: 190 }}
                             options={[
                                 { value: '全部', label: '全部' },
                                 { value: '商品名称（A-Z）', label: '商品名称（A-Z）' },

@@ -21,8 +21,13 @@ import React from 'react';
 
 interface  ProductDetail {
 title:string;
-
-
+product_image:string;
+meta_keyword:string;
+meta_description:string;
+style1:string;
+style2:string;
+tag1:string;
+tag2:string;
 }
 
 function ProductDetail() {
@@ -72,9 +77,9 @@ function ProductDetail() {
                     <div className='mc-layout-main'>
                         <div className='mc-layout-content'>
                         {productDetail && <ProductDataEdit productDetail={productDetail} />}
-                           <ProductImgEdit/>
-                           <MultipleStylesEdit onSecondInputChange={handleSecondInputChange} />
-                            {styleId && <ProductStyleListEdit styleId={styleId} />}
+                        {productDetail && <ProductImgEdit productDetail={productDetail} />}
+                        <MultipleStylesEdit productDetail={productDetail} onSecondInputChange={handleSecondInputChange} />
+              {styleId && <ProductStyleListEdit styleId={styleId} />}
                         </div>
                         <div className='mc-layout-extra'>
                            <ProductSettingsEdit/>

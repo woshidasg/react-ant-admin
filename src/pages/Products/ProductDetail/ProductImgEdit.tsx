@@ -18,9 +18,11 @@ const getBase64 = (file: FileType): Promise<string> =>
     reader.onload = () => resolve(reader.result as string);
     reader.onerror = (error) => reject(error);
   });
-
-export default function ProductImgEdit() {
-
+  interface ProductDetail {
+    title: string;
+    product_image: string;
+  }
+  export default function ProductImgEdit({ productDetail }: { productDetail: ProductDetail }) {
   // youtubeUrl
   const onFinish = (values: any) => {
     console.log('Received values of form:', values);
@@ -48,10 +50,6 @@ export default function ProductImgEdit() {
     })
   }
 
-  // Modal 中选中顺序
-  const getTempSelectedImgIndex = (img: any) => {
-    return tempSelectedImg.indexOf(img);
-  }
   // 是否已被之前选中
   const isBeforeSelected = (img: any) => {
     return newStore.isIncludeSelectedImgList(img);
@@ -78,42 +76,7 @@ export default function ProductImgEdit() {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [fileList, setFileList] = useState<UploadFile[]>([
-    // {
-    //   uid: '-1',
-    //   name: 'image.png',
-    //   status: 'done',
-    //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    // },
-    // {
-    //   uid: '-2',
-    //   name: 'image.png',
-    //   status: 'done',
-    //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    // },
-    // {
-    //   uid: '-3',
-    //   name: 'image.png',
-    //   status: 'done',
-    //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    // },
-    // {
-    //   uid: '-4',
-    //   name: 'image.png',
-    //   status: 'done',
-    //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    // },
-    // {
-    //   uid: '-xxx',
-    //   percent: 50,
-    //   name: 'image.png',
-    //   status: 'uploading',
-    //   url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    // },
-    // {
-    //   uid: '-5',
-    //   name: 'image.png',
-    //   status: 'error',
-    // },
+
   ]);
 
   const handlePreview = async (file: UploadFile) => {
@@ -189,72 +152,45 @@ export default function ProductImgEdit() {
           >添加多媒体图片</a>
         </>}
       >
-        <div className="content" style={{
-          display: "flex",
-          height: "auto",
-        }}>
-          {/* 图片展示 */}
-          {/* {
-            newStore.getSelectedImgList()?.map((img: any, index: any) => {
-              let tempSelectedImgIndex = tempSelectedImg.indexOf(img);
-             return (
-                <div style={{
-                  height: 150,
-                  width: 128,
-                  borderRadius: 8,
-                  overflow: "hidden"
-                }}>
-                  <img
-                    style={{
-                      height: 128,
-                      width: 128,
-                      overflow: 'hidden',
-                      objectFit: "contain",
-                      background: "rgb(247, 248, 251)",
-                      cursor: "default",
-                    }}
-                    src={img?.fileUrl} key={img?.fileId} />
-                </div>)
-            })
-          } */}
-          <Upload
-            action="/appstore/ApiAppstore/doUploadPic"
-            listType="picture-card"
-            multiple={true}
-            fileList={fileList}
-            onPreview={handlePreview}
-            onChange={handleChange}
-          >
-            {fileList.length >= 8 ? null : uploadButton}
-          </Upload>
-          {previewImage && (
-            <Image
-              wrapperStyle={{ display: 'none' }}
-              preview={{
-                visible: previewOpen,
-                onVisibleChange: (visible) => setPreviewOpen(visible),
-                afterOpenChange: (visible) => !visible && setPreviewImage(''),
-              }}
-              src={previewImage}
-            />
-          )}
+     <div className="content" style={{ display: "flex", height: "auto" }}>
+  {/* 图片展示 */}
+  {productDetail?.product_image && (
+    <Image
+      src={productDetail.product_image}
+      preview={{
+        visible: previewOpen,
+        onVisibleChange: (visible) => setPreviewOpen(visible),
+        afterOpenChange: (visible) => !visible && setPreviewImage(''),
+      }}
+      style={{ width: 100, height: 100 }}
+    />
+  )}
+  
+  {!productDetail?.product_image && (
+    <Upload
+      action="/appstore/ApiAppstore/doUploadPic"
+      listType="picture-card"
+      multiple={true}
+      fileList={fileList}
+      onPreview={handlePreview}
+      onChange={handleChange}
+    >
+      {fileList.length >= 8 ? null : uploadButton}
+    </Upload>
+  )}
 
-
-        </div>
-        {/* 图片上传-外 */}
-        {/* <Dragger {...props} height={200} >
-          <PlusOutlined style={{
-            fontSize: 30,
-            color: "#929292"
-          }} />
-          <p className="ant-upload-text">添加图片（或把图片拖到框内）</p>
-        </Dragger>
-
-        <UploadTipDesc>
-          支持上传jpg、png、webp、SVG格式图片，最大限制为10M（4M为最佳店铺浏览体验）；支持上传GIF格式动图，最大限制8M
-        </UploadTipDesc> */}
-
-        {/* 添加url Modal */}
+  {previewImage && (
+    <Image
+      wrapperStyle={{ display: 'none' }}
+      preview={{
+        visible: previewOpen,
+        onVisibleChange: (visible) => setPreviewOpen(visible),
+        afterOpenChange: (visible) => !visible && setPreviewImage(''),
+      }}
+      src={previewImage}
+    />
+  )}
+</div>
         <Modal
           title="YouTube视频"
           centered

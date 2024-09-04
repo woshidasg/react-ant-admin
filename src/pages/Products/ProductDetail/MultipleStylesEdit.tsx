@@ -100,8 +100,19 @@ const options = [
     label: "Style",
   },
 ];
+interface  ProductDetail {
+  title:string;
+  product_image:string;
+  meta_keyword:string;
+  meta_description:string;
+  style1:string;
+  style2:string;
+  tag1:string;
+  tag2:string;
+  }
 
 interface MultipleStylesEditProps {
+  productDetail: ProductDetail;
   onSecondInputChange?: (value: string) => void;
 }
 export default function MultipleStylesEdit(props: MultipleStylesEditProps) {
@@ -111,6 +122,7 @@ export default function MultipleStylesEdit(props: MultipleStylesEditProps) {
   const [values, setValues] = useState<string[]>([]);
   const [tags, setTags] = useState<string[][]>([]); // 用于存储每个规格组的标签
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
  // 收集所有输入值后调用父组件提供的回调函数
  useEffect(() => {
   const allTagsFlat = tags.flat();
@@ -145,8 +157,7 @@ export default function MultipleStylesEdit(props: MultipleStylesEditProps) {
     }
   }
 
-  // 添加 useRef 来保存输入框的引用
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
   inputRefs.current = Array(values.length).fill(null);
   // 处理标签选择或输入变化
   function handleTagChange(value: string[], index: number) {
@@ -188,6 +199,7 @@ export default function MultipleStylesEdit(props: MultipleStylesEditProps) {
     <AutoComplete
       placeholder="请输入属性"
       style={{ width: "160px", height: "44px" }}
+      value={props.productDetail.style1}
       options={options.map(opt => ({ value: opt.value, label: opt.label }))}
       filterOption={(inputValue, option) =>
         option.value.toUpperCase().includes(inputValue.toUpperCase())
@@ -204,8 +216,9 @@ export default function MultipleStylesEdit(props: MultipleStylesEditProps) {
         mode="tags"
         allowClear
         style={{ width: "580px", height: "44px" }}
+        value={props.productDetail.tag1}
         placeholder={tags[index]?.length > 0 ? "" : "请输入多个选项，使用回车键添加新标签"}
-        value={tags[index]}
+      
         onChange={(value) => handleTagChange(value, index)}
         onSearch={(searchText) => handleSearch(searchText, index)}
         onKeyDown={(e) => handleKeyDown(e, index)}
